@@ -1,12 +1,9 @@
 package otus;
 
 import io.gatling.javaapi.core.ScenarioBuilder;
-import io.gatling.javaapi.core.Simulation;
 
 import static io.gatling.javaapi.core.CoreDsl.pause;
 import static io.gatling.javaapi.core.CoreDsl.scenario;
-import static io.gatling.javaapi.core.OpenInjectionStep.atOnceUsers;
-import static otus.Otus.*;
 
 // Класс хранит в себе сценарий запуска
 
