@@ -25,8 +25,7 @@ public class Action {
                     .get("/cgi-bin/nav.pl")
                     .queryParam("in", "home")
                     .check(css("input[name='userSession']", "value").saveAs("userSession"))
-                    .check(status().is(200))
-                    .check(bodyString().saveAs("response")));
+                    .check(status().is(200)));
 
 
     // Запрос POST для аутентификации
@@ -40,8 +39,7 @@ public class Action {
                             .formParam("login.x", "53")
                             .formParam("login.y", "8")
                             .formParam("JSFormSubmit", "off")
-                            .check(status().is(200))
-                            .check(bodyString().saveAs("response")));
+                            .check(status().is(200)));
 
 
     //Запрос GET для открытия первой страницы Flight
@@ -51,8 +49,7 @@ public class Action {
                     .queryParam("page", "menu")
                     .queryParam("in", "flights")
                     .queryParam("userSession", "#{userSession}")
-                    .check(status().is(200))
-                    .check(bodyString().saveAs("response")));
+                    .check(status().is(200)));
 
 
     //Запрос GET для полчуние списка городов Flight
@@ -63,8 +60,7 @@ public class Action {
                     .queryParam("userSession", "#{userSession}")
                     .check(
                             regex("<option value=\"([^\"]*)\">").findAll().saveAs("cities"))
-                    .check(status().is(200))
-                    .check(bodyString().saveAs("response")));
+                    .check(status().is(200)));
 
 
     //Запрос POST для выбора города отправление и прибытия
