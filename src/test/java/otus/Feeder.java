@@ -14,4 +14,9 @@ public class Feeder {
     public static FeederBuilder<String> departureFeeder() {
         return csv("departureCity.csv").random();
     }
+
+    // Фидер для городов прибытия
+    public static FeederBuilder<String> arriveFeeder() {
+        return csv("arriveCity.csv").random();
+    }
 }
