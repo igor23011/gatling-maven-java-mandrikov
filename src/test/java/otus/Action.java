@@ -6,8 +6,7 @@ import io.gatling.javaapi.http.HttpRequestActionBuilder;
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
-import static otus.Feeder.departureFeeder;
-import static otus.Feeder.usersFeeder;
+import static otus.Feeder.*;
 
 // Класс хранит в себе все HTTP Запросы
 
@@ -19,12 +18,6 @@ public class Action {
                     .get("/webtours/")
                     .check(status().is(200)));
 
-    //Запрос GET для получения welcome
-    public static ChainBuilder getUserWelcome =
-            exec(http("getUserWelcome")
-                    .get("/cgi-bin/welcome.pl")
-                    .queryParam("singOff", "1")
-                    .check(status().is(200)));
 
     //Запрос GET для получения userSession
     public static ChainBuilder getUserSession =
@@ -33,14 +26,7 @@ public class Action {
                     .queryParam("in", "home")
                     .check(css("input[name='userSession']", "value").saveAs("userSession"))
                     .check(status().is(200))
-                    .check(bodyString().saveAs("response")))
-//                                    // Теперь мы можем воспользоваться сохранённым телом ответа
-                    .exec(session -> {
-                        String responseBody = session.get("response");
-                        System.out.println(responseBody);      // Можно вывести содержимое ответа
-                        return session;
-                    });
-    ;
+                    .check(bodyString().saveAs("response")));
 
 
     // Запрос POST для аутентификации
@@ -55,22 +41,8 @@ public class Action {
                             .formParam("login.y", "8")
                             .formParam("JSFormSubmit", "off")
                             .check(status().is(200))
-                            .check(bodyString().saveAs("response")))
-//
-                    // Теперь мы можем воспользоваться сохранённым телом ответа
-                    .exec(session -> {
-                        String responseBody = session.get("response");
-                        System.out.println(responseBody);      // Можно вывести содержимое ответа
-                        return session;
-                    });
+                            .check(bodyString().saveAs("response")));
 
-
-    //Запрос GET для открытия первой страницы Flight
-    public static ChainBuilder getPageFlight0 =
-            exec(http("getPageFlight0")
-                    .get("/cgi-bin/welcome.pl")
-                    .queryParam("page", "search")
-                    .check(status().is(200)));
 
     //Запрос GET для открытия первой страницы Flight
     public static ChainBuilder getPageFlight =
@@ -80,15 +52,7 @@ public class Action {
                     .queryParam("in", "flights")
                     .queryParam("userSession", "#{userSession}")
                     .check(status().is(200))
-                    .check(bodyString().saveAs("response")))
-
-//                    // Теперь мы можем воспользоваться сохранённым телом ответа
-//                    .exec(session -> {
-//                        String responseBody = session.get("response");
-//                        System.out.println(responseBody);      // Можно вывести содержимое ответа
-//                        return session;
-//                    });
-            ;
+                    .check(bodyString().saveAs("response")));
 
 
     //Запрос GET для полчуние списка городов Flight
@@ -100,34 +64,20 @@ public class Action {
                     .check(
                             regex("<option value=\"([^\"]*)\">").findAll().saveAs("cities"))
                     .check(status().is(200))
-                    .check(bodyString().saveAs("response")))
-
-//                    // Теперь мы можем воспользоваться сохранённым телом ответа
-//                    .exec(session -> {
-//                        String responseBody = session.get("response");
-//                        System.out.println(responseBody);      // Можно вывести содержимое ответа
-//                        return session;
-//                    });
-            ;
+                    .check(bodyString().saveAs("response")));
 
 
     //Запрос POST для выбора города отправление и прибытия
     public static ChainBuilder postCheckCityFlight =
             feed(departureFeeder())
-                    // .header("Content-Length", "244")
                     .exec(http("postCheckCityFlight")
                             .post("/cgi-bin/reservations.pl")
-                           // .header("Content-Type", "application/x-www-form-urlencoded")
-                          //  .header("Content-Length", "244")
                             .formParam("advanceDiscount", "0")
-                            // .formParam("depart", "#{departureCity}")
-                            .formParam("depart", "Paris")
-                            .formParam("departDate", "18/02/2026")
-                            // .formParam("arrive", "#{departureCity}")
-                            .formParam("arrive", "London")
-                            .formParam("returnDate", "19/02/2026")
+                            .formParam("depart", "#{departureCity}")
+                            .formParam("departDate", "02/19/2026")
+                            .formParam("arrive", "#{arriveCity}")
+                            .formParam("returnDate", "02/20/2026")
                             .formParam("numPassengers", "1")
-                            //.formParam("roundtrip", "on")
                             .formParam("seatPref", "None")
                             .formParam("seatType", "Coach")
                             .formParam("findFlights.x", "32")
@@ -135,19 +85,11 @@ public class Action {
                             .formParam(".cgifields", "roundtrip")
                             .formParam(".cgifields", "seatType")
                             .formParam(".cgifields", "seatPref")
-//                            .check(
-//                                    regex("<input.*?name=\"outboundFlight\".*?value=\"([^\"]*)\".*?[checked].*>").saveAs("selectedFlight")
-//                            )
-                            .check(status().is(200))
-                            .check(bodyString().saveAs("response")))
+                            .check(
+                                    regex("<input.*?name=\"outboundFlight\".*?value=\"([^\"]*)\".*?[checked].*>").saveAs("selectedFlight")
+                            )
+                            .check(status().is(200)));
 
-                    // Теперь мы можем воспользоваться сохранённым телом ответа
-                    .exec(session -> {
-                        String responseBody = session.get("response");
-                        System.out.println(responseBody);      // Можно вывести содержимое ответа
-                        return session;
-                    });
-    ;
 
     //Запрос POST для выбора рейса
     public static ChainBuilder postCheckFlight =
@@ -155,22 +97,14 @@ public class Action {
                     .exec(http("postCheckCityFlight")
                             .post("/cgi-bin/reservations.pl")
                             .formParam("advanceDiscount", "0")
-                            .formParam("outboundFlight", "121;237;02/17/2026")
+                            .formParam("outboundFlight", "#{selectedFlight}")
                             .formParam("numPassengers", "1")
                             .formParam("seatPref", "None")
                             .formParam("seatType", "Coach")
                             .formParam("reserveFlights.x", "52")
                             .formParam("reserveFlights.y", "6")
-                            .check(status().is(200))
-                    .check(bodyString().saveAs("response")))
+                            .check(status().is(200)));
 
-            // Теперь мы можем воспользоваться сохранённым телом ответа
-            .exec(session -> {
-        String responseBody = session.get("response");
-        System.out.println(responseBody);      // Можно вывести содержимое ответа
-        return session;
-    })
-            ;
 
     //Запрос POST для оплаты
     public static ChainBuilder postPaymentFlight =
@@ -187,7 +121,7 @@ public class Action {
                     .formParam("numPassengers", "1")
                     .formParam("seatType", "Coach")
                     .formParam("seatPref", "None")
-                    .formParam("outboundFlight", "121;237;02/17/2026")
+                    .formParam("outboundFlight", "#{selectedFlight}")
                     .formParam("advanceDiscount", "0")
                     .formParam("returnFlight", "")
                     .formParam("JSFormSubmit", "off")

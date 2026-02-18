@@ -23,18 +23,15 @@ public class Otus {
             .header("Accept-Encoding", "gzip, deflate")
             .header("Accept-Language", "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7")
             .header("Connection", "keep-alive")
-
+            //.header("Content-Type", "application/x-www-form-urlencoded")
+            //.header("Content-Length", "240")
             .header("Host", "webtours.load-test.ru:1080")
             .header("Origin", "http://webtours.load-test.ru:1080")
             .header("Priority", "u=4")
             .header("Referer", "http://webtours.load-test.ru:1080/cgi-bin/reservations.pl?page=welcome")
             .header("Upgrade-Insecure-Requests", "1");
 
-    // Define assertions
-    // Reference: https://docs.gatling.io/reference/script/core/assertions/
+       // Reference: https://docs.gatling.io/reference/script/core/assertions/
     protected static final Assertion assertion = global().failedRequests().count().lt(1L);
-
-    // Define injection profile and execute the test
-    // Reference: https://docs.gatling.io/reference/script/core/injection/
 
 }

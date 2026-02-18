@@ -8,7 +8,7 @@ import io.gatling.javaapi.core.Simulation;
 
 public class Debug extends Simulation {
     {
-        setUp(scenario.injectOpen(atOnceUsers(1))).assertions(assertion).protocols(httpProtocol);
+        setUp(scenario.injectOpen(atOnceUsers(4))).assertions(assertion).protocols(httpProtocol);
     }
 }
 
