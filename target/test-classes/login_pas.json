@@ -1,0 +1,8 @@
+{
+  "userSession": "${userSession}",
+  "username": "${userName}",
+  "password": "${userPassword}",
+  "login.x": "43",
+  "login.y": "6",
+  "JSFormSubmit": "off"
+}
